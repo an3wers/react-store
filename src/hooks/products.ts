@@ -13,11 +13,16 @@ export function useProducts() {
     });
   }
 
-  async function fetchProducts() {
+  async function fetchProducts(cat: string) {
+
+    const initUrl = cat === 'All' ? 'https://fakestoreapi.com/products' : `https://fakestoreapi.com/products/category/${cat}`
+
+    // console.log('Category', cat)
+    setProductsIsLoaded(false);
     setError('');
     try {
       const resp = await axios.get<IProduct[]>(
-        'https://fakestoreapi.com/products?limit=8'
+        initUrl
       );
       // console.log(resp)
       setProducts(resp.data);
@@ -28,9 +33,9 @@ export function useProducts() {
     }
   }
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
 
-  return { products, productsIsLoaded, error, addProduct };
+  return { products, productsIsLoaded, error, addProduct, fetchProducts };
 }

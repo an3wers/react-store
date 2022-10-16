@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { ReactEventHandler, useState } from 'react';
 
 interface ICategoriesProps {
   categories: string[];
+  activeCategory: number
+  setCategory: (index: number) => void
 }
 
-const Categories: React.FC<ICategoriesProps> = ({ categories }) => {
+const Categories: React.FC<ICategoriesProps> = ({ categories, activeCategory, setCategory}) => {
   const activeClasses = [
     'text-white bg-gray-800 border border-transparent hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-5 py-2 cursor-pointer',
   ];
@@ -12,7 +14,11 @@ const Categories: React.FC<ICategoriesProps> = ({ categories }) => {
     'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2 cursor-pointer',
   ];
 
-  const [activeTab, setActiveTab] = useState(0);
+  // const [activeTab, setActiveTab] = useState(0);
+
+  const tabHandler = (index:number) => {
+    setCategory(index)
+  }
 
   // const cats: string[] = [
   //   'Все',
@@ -30,9 +36,9 @@ const Categories: React.FC<ICategoriesProps> = ({ categories }) => {
           return (
             <li
               key={index}
-              onClick={() => setActiveTab(index)}
+              onClick={() => tabHandler(index)}
               className={
-                activeTab === index
+                activeCategory === index
                   ? activeClasses.join('')
                   : defaultClasses.join('')
               }

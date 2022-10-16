@@ -1,23 +1,28 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export function useCategories() {
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>(["All"]);
   const [categoriesIsLoaded, setCategoriesIsLoaded] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   async function fetchCategories() {
     try {
       const res = await axios({
-        method: 'GET',
-        url: 'https://fakestoreapi.com/products/categories',
+        method: "GET",
+        url: "https://fakestoreapi.com/products/categories",
       });
-      console.log('Cats', res);
+      // console.log("Cats", res);
 
-      setCategories(res.data);
+      // setCategories([...categories, ...res.data]);
+
+      setCategories((prev) => {
+        return [...prev, ...res.data];
+      });
+
       setCategoriesIsLoaded(true);
     } catch (error) {
-      setError('На странице произошла ошибка');
+      setError("На странице произошла ошибка");
     } finally {
       setCategoriesIsLoaded(true);
     }

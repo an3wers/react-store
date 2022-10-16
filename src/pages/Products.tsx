@@ -4,7 +4,7 @@ import { useProducts } from '../hooks/products';
 import Error from '../components/Error/error';
 import Modal from '../components/UI/modal/Modal';
 import CreateProduct from '../components/Product/CreateProduct';
-import { useContext } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { IProduct } from '../types/types';
 import { ModalContext } from '../context/ModalContext';
 import Sort from '../components/Sort/Sort';
@@ -14,8 +14,17 @@ import { useCategories } from '../hooks/categories';
 
 const ProductsPage = () => {
   // hook
-  const { products, productsIsLoaded, error: pError } = useProducts();
+  const { products, productsIsLoaded, error: pError, fetchProducts } = useProducts();
   const { categories, error: cError, categoriesIsLoaded } = useCategories();
+
+  // state
+  const [activeCategory, setActiveCategory] = useState(0)
+  const [page, setPage] = useState(1)
+
+  const countOnPage = 6
+
+  const categotyName = categories[activeCategory]
+
   // const [isModal, setIsModal] = useState(false);
 
   // const { isModal, open, close } = useContext(ModalContext);
@@ -35,9 +44,41 @@ const ProductsPage = () => {
   //   closeModalHandler();
   // }
 
+  useEffect(() => {
+
+    fetchProducts(categotyName)
+
+  }, [activeCategory])
+
+  const getPageCount = useMemo(() => {
+    return Math.ceil(products.length / 6)
+  }, [products])
+
+  const setActiveCategories = (index: number) => {
+    setActiveCategory(() => {
+      return index
+    })
+  }
+
+  const slicedProducts = products.slice((page - 1) * countOnPage, page * countOnPage)
+
+  useEffect(() => {
+    // 👇️ scroll to top on page load
+    console.log('Page')
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+
+  }, [page]);
+
+  const pageHandler = (p: number) => {
+    setPage(() => {
+      return p
+    })
+  }
+
+
   return (
     <div className="container relative">
-      {!productsIsLoaded && !categoriesIsLoaded && <SpinnerPage />}
+      {!productsIsLoaded && <SpinnerPage />}
       {pError && cError && <Error message="На странице произошла ошибка" />}
 
       {/* TODO: Move to admin 
@@ -56,15 +97,16 @@ const ProductsPage = () => {
       {productsIsLoaded && (
         <div className="space-y-10 py-10">
           <div className=" flex items-center justify-between">
-            <Categories categories={categories} />
+            <Categories activeCategory={activeCategory} setCategory={setActiveCategories} categories={categories} />
             <Sort />
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((item) => {
+            {slicedProducts.map((item) => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
-          <Pagintaion />
+          {getPageCount}
+          {getPageCount > 1 && <Pagintaion onPage={pageHandler} pageCount={getPageCount} current={page} />}
         </div>
       )}
 
