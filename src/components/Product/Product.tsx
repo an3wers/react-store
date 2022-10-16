@@ -8,7 +8,7 @@ interface ProductProps {
 const Product = ({ product }: ProductProps) => {
   return (
     <div className="w-full bg-white rounded-lg shadow-md block">
-      <div className="p-8 aspect-square">
+      <div className="p-8 h-64 w-full">
         <img
           className="w-full h-full object-contain"
           src={product.image}
