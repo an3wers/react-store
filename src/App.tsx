@@ -1,7 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import Header from './components/Header/Header';
 import AboutPage from './pages/About';
-import ProductsPage from './pages/Products';
+import HomePage from './pages/Home';
+import Cart from './pages/Cart';
+import ProductPage from './pages/Product';
 
 /*
 API:
@@ -13,8 +15,10 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<ProductsPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path=":productId" element={<ProductPage />} />
       </Routes>
     </>
   );

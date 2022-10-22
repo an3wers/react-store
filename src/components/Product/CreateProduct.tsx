@@ -88,7 +88,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
       <div className="flex space-x-4">
         <input
           type="number"
-          value={productValues.rating.rate || ''}
+          value={productValues.rating?.rate || ''}
           onChange={(e) =>
             setProductValues({
               ...productValues,
@@ -100,7 +100,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
         />
         <input
           type="number"
-          value={productValues.rating.count || ''}
+          value={productValues.rating?.count || ''}
           onChange={(e) =>
             setProductValues({
               ...productValues,

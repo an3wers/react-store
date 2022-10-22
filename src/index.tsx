@@ -5,15 +5,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ModalState } from "./context/ModalContext";
 import { BrowserRouter } from "react-router-dom";
+import { CartProvide } from "./context/CartContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <BrowserRouter>
-    <ModalState>
-      <App />
-    </ModalState>
+    <CartProvide>
+      <ModalState>
+        <App />
+      </ModalState>
+    </CartProvide>
   </BrowserRouter>
 );
 

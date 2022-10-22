@@ -12,7 +12,7 @@ import Pagintaion from '../components/UI/pagination/Pagination';
 import Categories from '../components/Categories/Categories';
 import { useCategories } from '../hooks/categories';
 
-const ProductsPage = () => {
+const HomePage = () => {
   // hook
   const { products, productsIsLoaded, error: pError, fetchProducts } = useProducts();
   const { categories, error: cError, categoriesIsLoaded } = useCategories();
@@ -55,6 +55,7 @@ const ProductsPage = () => {
   }, [products])
 
   const setActiveCategories = (index: number) => {
+    pageHandler(1)
     setActiveCategory(() => {
       return index
     })
@@ -64,7 +65,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     // 👇️ scroll to top on page load
-    console.log('Page')
+    // console.log('Page')
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
   }, [page]);
@@ -105,7 +106,6 @@ const ProductsPage = () => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
-          {getPageCount}
           {getPageCount > 1 && <Pagintaion onPage={pageHandler} pageCount={getPageCount} current={page} />}
         </div>
       )}
@@ -119,4 +119,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default HomePage;
