@@ -7,14 +7,17 @@ interface ICartContext {
     addItem: (item: ICartItem) => void,
     removeItem: (id: number) => void,
     removeAll: () => void,
+    setCount: (id: number, count: number) => void
+    
 }
 
 export const CartContext = createContext<ICartContext>({
     items: [],
     addItem: () => { },
-    removeItem: () => { },
+    removeItem: (id) => { },
     removeAll: () => { },
-    summ: 0
+    summ: 0,
+    setCount: () => { }
 })
 
 export const CartProvide = ({ children }: { children: React.ReactNode }) => {
@@ -41,15 +44,31 @@ export const CartProvide = ({ children }: { children: React.ReactNode }) => {
             return [...prev, item]
         })
     }
-    const removeItem = () => {
-
+    const removeItem = (id:number) => {
+        // console.log('Remove from contex', id)
+        // const tmp = items.filter(el => el.id !== id)
+        setItems((prev) => {
+            return prev.filter(el => el.id !== id)
+        })
     }
-    const removeAll = () => {
 
+    const setCount = (id: number, count: number) => {
+        setItems((prev) => {
+            return prev.map(el => {
+                if(el.id === id) {
+                    el.count = count
+                }
+                return el
+            })
+        })
+    }
+
+    const removeAll = () => {
+        // TODO: make remove all
     }
 
     return (
-        <CartContext.Provider value={{ items, addItem, removeItem, removeAll, summ }}>
+        <CartContext.Provider value={{ items, addItem, removeItem, removeAll, summ, setCount }}>
             {children}
         </CartContext.Provider>
     )

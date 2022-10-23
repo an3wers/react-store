@@ -23,7 +23,7 @@ const SingleProduct: React.FC<ISingleProductProps> = ({ item }) => {
         <div className="grid grid-cols-12 gap-6 py-6">
             <div className=" col-span-12 col-start-1 col-end-13 md:col-span-6 md:col-start-1 md:col-end-7 xl:col-start-2 xl:col-end-7 xl:col-span-5">
                 <div className=" w-full h-auto">
-                    <img className="w-full h-full object-contain" src={item.image} alt="" />
+                    <img className="w-full h-full object-contain" src={item.image} alt={item.title} />
                 </div>
             </div>
             <div className=" col-span-12 col-start-1 col-end-13 md:col-span-6 md:col-start-7 md:col-end-13 xl:col-start-7 xl:col-end-12 xl:col-span-5">
