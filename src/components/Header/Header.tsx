@@ -41,17 +41,17 @@ const Header = () => {
           <button
             type="button"
             onClick={() => navigate('/cart')}
-            className="text-white inline-flex space-x-4 border border-transparent bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2"
+            className="text-gray-900 inline-flex space-x-4 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2.5 mr-2 mb-2"
           >
             <span>{useFormatterPrice(summ)}</span>
-            <div className="w-[1px] h-6 bg-white/50"></div>
+            <div className="w-[1px] h-6 bg-black/50"></div>
             <span className=" inline-flex space-x-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="#ffffff"
+                stroke="currentColor"
                 className="w-6 h-6"
               >
                 <path

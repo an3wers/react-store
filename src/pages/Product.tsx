@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
 import { IProduct } from '../types/types'
 import SpinnerPage from '../components/UI/spinner/spinnerPage'
+import SingleProduct from '../components/Product/SingleProduct'
 
 
 const ProductPage = () => {
@@ -37,9 +38,8 @@ const ProductPage = () => {
 
     return (
         <div className="container">
-            {isLoaded ? <div>
-                Товар:
-            </div>
+            {isLoaded && product
+                ? <SingleProduct item={product} />
                 : <SpinnerPage />}
 
         </div>
