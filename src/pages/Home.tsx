@@ -11,19 +11,20 @@ import Sort from '../components/Sort/Sort';
 import Pagintaion from '../components/UI/pagination/Pagination';
 import Categories from '../components/Categories/Categories';
 import { useCategories } from '../hooks/categories';
+import Search from '../components/Search/Search';
 
 const HomePage = () => {
   // hook
   const { products, productsIsLoaded, error: pError, fetchProducts } = useProducts();
   const { categories, error: cError, categoriesIsLoaded } = useCategories();
+  const [searchValue, setSearchValue] = useState('')
 
   // state
   const [activeCategory, setActiveCategory] = useState(0)
   const [page, setPage] = useState(1)
-
   const countOnPage = 6
-
   const categotyName = categories[activeCategory]
+
 
   // const [isModal, setIsModal] = useState(false);
 
@@ -44,15 +45,19 @@ const HomePage = () => {
   //   closeModalHandler();
   // }
 
+  const filteredProducts = useMemo(() => {
+    setPage(1)
+    return products.filter(el => el.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+  }, [products, searchValue])
+
   useEffect(() => {
-
     fetchProducts(categotyName)
-
   }, [activeCategory])
 
   const getPageCount = useMemo(() => {
-    return Math.ceil(products.length / 6)
-  }, [products])
+    return Math.ceil(filteredProducts.length / 6)
+  }, [filteredProducts])
+
 
   const setActiveCategories = (index: number) => {
     pageHandler(1)
@@ -61,11 +66,14 @@ const HomePage = () => {
     })
   }
 
-  const slicedProducts = products.slice((page - 1) * countOnPage, page * countOnPage)
+  // const slicedProducts = products.slice((page - 1) * countOnPage, page * countOnPage)
+
+  const slicedProducts = useMemo(() => {
+    return filteredProducts.slice((page - 1) * countOnPage, page * countOnPage)
+  }, [filteredProducts, page])
 
   useEffect(() => {
-    // 👇️ scroll to top on page load
-    // console.log('Page')
+    // scroll to top on page load
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
   }, [page]);
@@ -75,7 +83,6 @@ const HomePage = () => {
       return p
     })
   }
-
 
   return (
     <div className="container relative">
@@ -99,7 +106,8 @@ const HomePage = () => {
         <div className="space-y-10 py-10">
           <div className=" flex items-center justify-between">
             <Categories activeCategory={activeCategory} setCategory={setActiveCategories} categories={categories} />
-            <Sort />
+            {/* <Sort /> */}
+            <Search value={searchValue} onSearch={setSearchValue} />
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {slicedProducts.map((item) => {

@@ -13,6 +13,7 @@ export function useProducts() {
     });
   }
 
+
   async function fetchProducts(cat: string) {
 
     const initUrl = cat === 'All' ? 'https://fakestoreapi.com/products' : `https://fakestoreapi.com/products/category/${cat}`
