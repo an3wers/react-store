@@ -1,111 +1,132 @@
-import Product from '../components/Product/Product';
-import SpinnerPage from '../components/UI/spinner/spinnerPage';
-import { useProducts } from '../hooks/products';
-import Error from '../components/Error/error';
-import Modal from '../components/UI/modal/Modal';
-import CreateProduct from '../components/Product/CreateProduct';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../types/types';
-import { ModalContext } from '../context/ModalContext';
-import Sort from '../components/Sort/Sort';
-import Pagintaion from '../components/UI/pagination/Pagination';
-import Categories from '../components/Categories/Categories';
-import { useCategories } from '../hooks/categories';
-import Search from '../components/Search/Search';
+import Product from "../components/Product/Product";
+import SpinnerPage from "../components/UI/spinner/spinnerPage";
+import { useProducts } from "../hooks/products";
+import Error from "../components/Error/error";
+import { useEffect, useMemo, useRef, useState } from "react";
+// import Sort from "../components/Sort/Sort";
+import Pagintaion from "../components/UI/pagination/Pagination";
+import Categories from "../components/Categories/Categories";
+import { useCategories } from "../hooks/categories";
+import Search from "../components/Search/Search";
+import qs from "qs";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { setCategory, setPage } from "../store/slices/filtersSlice";
 
-const HomePage = () => {
-  // hook
-  const { products, productsIsLoaded, error: pError, fetchProducts } = useProducts();
-  const { categories, error: cError, categoriesIsLoaded } = useCategories();
-  const [searchValue, setSearchValue] = useState('')
-
-  // state
-  const [activeCategory, setActiveCategory] = useState(0)
-  const [page, setPage] = useState(1)
-  const countOnPage = 6
-  const categotyName = categories[activeCategory]
-
-
-  // const [isModal, setIsModal] = useState(false);
-
-  // const { isModal, open, close } = useContext(ModalContext);
-
-  // function modalHandler() {
-  //   // setIsModal(true);
-  //   open();
+const HomePage: React.FC = () => {
+  // interface QueryParams {
+  //   page: string;
+  //   search: string;
+  //   category: string;
   // }
 
-  // function closeModalHandler() {
-  //   // setIsModal(false);
-  //   close();
-  // }
+  // hook products
+  const {
+    products,
+    productsIsLoaded,
+    error: pError,
+    fetchProducts,
+  } = useProducts();
 
-  // function onCreateHandler(product: IProduct) {
-  //   addProduct(product);
-  //   closeModalHandler();
-  // }
+  // hook categories
+  const { categories, error: cError } = useCategories();
 
-  const filteredProducts = useMemo(() => {
-    setPage(1)
-    return products.filter(el => el.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
-  }, [products, searchValue])
+  const dispatch = useAppDispatch();
+  const { selectedCategory, page } = useAppSelector((state) => state.filters);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [searchValue, setSearchValue] = useState("");
+
+  const isFirstRender = useRef(true);
+  const isSearchParams = useRef(false);
+  const countOnPage = 6;
 
   useEffect(() => {
-    fetchProducts(categotyName)
-  }, [activeCategory])
+    if (location.search) {
+      const params = qs.parse(
+        location.search.slice(1, window.location.search.length)
+      );
+      dispatch(setCategory(params.category as string));
+      if (params.page) {
+        dispatch(setPage(+params.page));
+      }
+      isSearchParams.current = true;
+    } else {
+      dispatch(setCategory('All'))
+      dispatch(setPage(1))
+      setSearchValue('')
+      isSearchParams.current = false;
+    }
 
-  const getPageCount = useMemo(() => {
-    return Math.ceil(filteredProducts.length / 6)
-  }, [filteredProducts])
+  }, [location]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      if (!isSearchParams.current) {
+        fetchProducts(selectedCategory);
+      }
+
+      isSearchParams.current = false;
+    } else {
+      fetchProducts(selectedCategory);
+    }
+  }, [selectedCategory]);
 
   const setActiveCategories = (index: number) => {
-    pageHandler(1)
-    setActiveCategory(() => {
-      return index
-    })
-  }
+    pageHandler(1);
+    dispatch(setCategory(categories[index]));
+  };
 
-  // const slicedProducts = products.slice((page - 1) * countOnPage, page * countOnPage)
+  const filteredProducts = useMemo(() => {
+    return products.filter((el) =>
+      el.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+    );
+  }, [searchValue, products]);
 
   const slicedProducts = useMemo(() => {
-    return filteredProducts.slice((page - 1) * countOnPage, page * countOnPage)
-  }, [filteredProducts, page])
+    return filteredProducts.slice((page - 1) * countOnPage, page * countOnPage);
+  }, [filteredProducts, page]);
+
+  const getPageCount = useMemo(() => {
+    return Math.ceil(filteredProducts.length / 6);
+  }, [filteredProducts]);
 
   useEffect(() => {
-    // scroll to top on page load
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [page]);
 
+  useEffect(() => {
+    if (!isFirstRender.current) {
+      const queryStr = qs.stringify({
+        page: page,
+        search: searchValue,
+        category: selectedCategory,
+      });
+      navigate(`?${queryStr}`); // добавляю строчку в Url
+      isSearchParams.current = true;
+    }
+    isFirstRender.current = false;
+  }, [page, searchValue, selectedCategory, navigate]);
+
   const pageHandler = (p: number) => {
-    setPage(() => {
-      return p
-    })
-  }
+    dispatch(setPage(p));
+  };
 
   return (
     <div className="container relative">
       {!productsIsLoaded && <SpinnerPage />}
       {pError && cError && <Error message="На странице произошла ошибка" />}
 
-      {/* TODO: Move to admin 
-      productsIsLoaded && (
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={modalHandler}
-            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            type="button"
-          >
-            Create product
-          </button>
-        </div>
-      ) */}
-
       {productsIsLoaded && (
         <div className="space-y-10 py-10">
           <div className=" flex items-center justify-between">
-            <Categories activeCategory={activeCategory} setCategory={setActiveCategories} categories={categories} />
+            <Categories
+              activeCategory={selectedCategory}
+              setCategory={setActiveCategories}
+              categories={categories}
+            />
             {/* <Sort /> */}
             <Search value={searchValue} onSearch={setSearchValue} />
           </div>
@@ -114,15 +135,18 @@ const HomePage = () => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
-          {getPageCount > 1 && <Pagintaion onPage={pageHandler} pageCount={getPageCount} current={page} />}
+          {!slicedProducts.length && (
+            <p className=" text-center py-10">Products not found</p>
+          )}
+          {getPageCount > 1 && (
+            <Pagintaion
+              onPage={pageHandler}
+              pageCount={getPageCount}
+              current={page}
+            />
+          )}
         </div>
       )}
-
-      {/* {isModal && (
-        <Modal title="Create product" onClose={closeModalHandler}>
-          <CreateProduct onCreate={onCreateHandler} />
-        </Modal>
-      )} */}
     </div>
   );
 };

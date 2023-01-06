@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { IProduct } from '../types/types';
+import axios from "axios";
+import { useState } from "react";
+import { IProduct } from "../types/types";
 
 export function useProducts() {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productsIsLoaded, setProductsIsLoaded] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   function addProduct(product: IProduct) {
     setProducts((prev) => {
@@ -13,30 +13,25 @@ export function useProducts() {
     });
   }
 
-
   async function fetchProducts(cat: string) {
-
-    const initUrl = cat === 'All' ? 'https://fakestoreapi.com/products' : `https://fakestoreapi.com/products/category/${cat}`
+    const initUrl =
+      cat === "All"
+        ? "https://fakestoreapi.com/products"
+        : `https://fakestoreapi.com/products/category/${cat}`;
 
     // console.log('Category', cat)
     setProductsIsLoaded(false);
-    setError('');
+    setError("");
     try {
-      const resp = await axios.get<IProduct[]>(
-        initUrl
-      );
+      const resp = await axios.get<IProduct[]>(initUrl);
       // console.log(resp)
       setProducts(resp.data);
     } catch (e) {
-      setError('На странице произошла ошибка');
+      setError("На странице произошла ошибка");
     } finally {
       setProductsIsLoaded(true);
     }
   }
-
-  // useEffect(() => {
-  //   fetchProducts();
-  // }, []);
 
   return { products, productsIsLoaded, error, addProduct, fetchProducts };
 }

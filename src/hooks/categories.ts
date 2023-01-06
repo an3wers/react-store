@@ -12,9 +12,6 @@ export function useCategories() {
         method: "GET",
         url: "https://fakestoreapi.com/products/categories",
       });
-      // console.log("Cats", res);
-
-      // setCategories([...categories, ...res.data]);
 
       setCategories((prev) => {
         return [...prev, ...res.data];
