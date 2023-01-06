@@ -1,10 +1,14 @@
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CartContext } from '../../context/CartContext';
+// import { CartContext } from '../../context/CartContext';
 import { useFormatterPrice } from '../../utlis/helpers';
-const Header = () => {
+import { useAppSelector } from '../../hooks/reduxHooks'
+import { selectSum } from '../../store/slices/cartSlice';
+const Header: React.FC = () => {
 
-  const { items, summ } = useContext(CartContext)
+  const summ = useAppSelector(selectSum)
+  const items = useAppSelector(state => state.cart.items)
+  // const { items, summ } = useContext(CartContext)
 
   const navigate = useNavigate()
   return (

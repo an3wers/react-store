@@ -43,10 +43,12 @@ const HomePage: React.FC = () => {
   const isSearchParams = useRef(false);
   const countOnPage = 6;
 
+  
+
   useEffect(() => {
     if (location.search) {
       const params = qs.parse(
-        location.search.slice(1, window.location.search.length)
+        location.search.slice(1, location.search.length)
       );
       dispatch(setCategory(params.category as string));
       if (params.page) {
@@ -61,8 +63,11 @@ const HomePage: React.FC = () => {
     }
 
   }, [location]);
-
+/*
+  * Есть баг с ссылкой ?page=1&search=&category=All, параметры равны дефолтному состоянию из-за этого не срабатывает хук
+  */
   useEffect(() => {
+    // Разобраться зачем тут проверяю на первый рендер
     if (isFirstRender.current) {
       if (!isSearchParams.current) {
         fetchProducts(selectedCategory);

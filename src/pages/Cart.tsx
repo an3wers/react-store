@@ -1,20 +1,21 @@
-import { useContext } from "react"
+// import { useContext } from "react"
 import CartEmptyState from "../components/Cart/EmptyState"
 import CartProductPreview from "../components/Cart/ProductPreview"
-import { CartContext } from "../context/CartContext"
+// import { CartContext } from "../context/CartContext"
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks'
+import { removeItem, updateCountInItem } from '../store/slices/cartSlice'
 
 const Cart: React.FC = () => {
+    const { items } = useAppSelector(state => state.cart)
+    const dispatch = useAppDispatch()
+    // const { items, removeItem, setCount } = useContext(CartContext)
 
-    const { items, removeItem, setCount } = useContext(CartContext)
-
-    const removeHandler = (id: number | undefined) => {
-        if(id) {
-            removeItem(id)
-        }
+    const removeHandler = (id:number) => {
+        dispatch(removeItem(id))
     }
 
     const setCountHandler = (id: number, count: number) => {
-        setCount(id, count)
+       dispatch(updateCountInItem({id, count}))
     }
 
     return (

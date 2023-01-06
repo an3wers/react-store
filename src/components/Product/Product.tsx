@@ -1,9 +1,11 @@
 // import { FC } from 'react'
-import { useContext, useMemo } from 'react';
-import { CartContext } from '../../context/CartContext';
+import { useMemo } from 'react';
+// import { CartContext } from '../../context/CartContext';
 import { IProduct } from '../../types/types';
 import { useFormatterPrice } from '../../utlis/helpers';
 import { Link } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import { addItem } from '../../store/slices/cartSlice'
 
 interface ProductProps {
   product: IProduct;
@@ -11,11 +13,14 @@ interface ProductProps {
 
 const Product = ({ product }: ProductProps) => {
 
-  const { addItem, items } = useContext(CartContext)
+  // const { addItem, items } = useContext(CartContext)
+  const { items } = useAppSelector(state => state.cart)
+  const dispatch = useAppDispatch()
 
   const addCartHandler = () => {
     // console.log(product)
-    addItem({ id: product.id, title: product.title, price: product.price, count: 1, image: product.image })
+    // addItem({ id: product.id, title: product.title, price: product.price, count: 1, image: product.image })
+    dispatch(addItem({ id: product.id, title: product.title, price: product.price, count: 1, image: product.image }))
   }
 
   const isInCart = useMemo(() => {

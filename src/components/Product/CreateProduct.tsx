@@ -3,11 +3,12 @@ import { IProduct } from "../../types/types";
 import axios from "axios";
 
 interface CreateProductProps {
-    onCreate: (product: IProduct) => void
+  onCreate: (product: IProduct) => void;
 }
 
-const CreateProduct = ({onCreate}: CreateProductProps) => {
+const CreateProduct = ({ onCreate }: CreateProductProps) => {
   const [productValues, setProductValues] = useState<IProduct>({
+    id: +new Date().toISOString(),
     title: "",
     price: 0,
     description: "",
@@ -28,7 +29,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
         productValues
       );
       console.log("New product", resp);
-      onCreate(resp.data)
+      onCreate(resp.data);
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +52,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
       />
       <input
         type="number"
-        value={productValues.price || ''}
+        value={productValues.price || ""}
         onChange={(e) =>
           setProductValues({ ...productValues, price: +e.target.value })
         }
@@ -88,7 +89,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
       <div className="flex space-x-4">
         <input
           type="number"
-          value={productValues.rating?.rate || ''}
+          value={productValues.rating?.rate || ""}
           onChange={(e) =>
             setProductValues({
               ...productValues,
@@ -100,7 +101,7 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
         />
         <input
           type="number"
-          value={productValues.rating?.count || ''}
+          value={productValues.rating?.count || ""}
           onChange={(e) =>
             setProductValues({
               ...productValues,
