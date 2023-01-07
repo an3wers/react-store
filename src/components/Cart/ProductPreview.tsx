@@ -22,7 +22,7 @@ const CartProductPreview: React.FC<ICartProduvtPreviewProps> = ({
     setSelectedValue(() => {
       return +event.target.value;
     });
-    setCount(item.id, +event.target.value)
+    setCount(item.id, +event.target.value);
     // if (item.id) {
     //   setCount(item.id, +event.target.value);
     // }
@@ -30,18 +30,20 @@ const CartProductPreview: React.FC<ICartProduvtPreviewProps> = ({
 
   return (
     <div className=" flex space-x-4 py-10 items-start justify-between">
-      <div className=" w-20 h-auto shrink-0">
-        <img
-          className="w-full h-full object-contain"
-          src={item.image}
-          alt={item.title}
-        />
-      </div>
-      <div className=" grow max-w-md space-y-1">
-        <div>
-          <Link to={`/${item.id}`}>{item.title}</Link>
+      <div className="flex space-x-6 items-start">
+        <div className="w-20 h-auto shrink-0">
+          <img
+            className="w-full h-full object-contain"
+            src={item.image}
+            alt={item.title}
+          />
         </div>
-        <div>{useFormatterPrice(item.price)}</div>
+        <div className=" grow w-80 space-y-1">
+          <div>
+            <Link to={`/${item.id}`}>{item.title}</Link>
+          </div>
+          <div>{useFormatterPrice(item.price)}</div>
+        </div>
       </div>
 
       <div className="w-20">

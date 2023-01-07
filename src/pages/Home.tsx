@@ -14,11 +14,11 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { setCategory, setPage } from "../store/slices/filtersSlice";
 
 const HomePage: React.FC = () => {
-  // interface QueryParams {
-  //   page: string;
-  //   search: string;
-  //   category: string;
-  // }
+  interface QueryParams {
+    page?: number;
+    search?: string;
+    category?: string;
+  }
 
   // hook products
   const {
@@ -43,41 +43,53 @@ const HomePage: React.FC = () => {
   const isSearchParams = useRef(false);
   const countOnPage = 6;
 
-  
-
   useEffect(() => {
     if (location.search) {
-      const params = qs.parse(
-        location.search.slice(1, location.search.length)
-      );
-      dispatch(setCategory(params.category as string));
+      const params = qs.parse(location.search.slice(1, location.search.length));
+      if (params.category) {
+        dispatch(setCategory(params.category as string));
+      } else {
+        dispatch(setCategory("All"));
+      }
       if (params.page) {
         dispatch(setPage(+params.page));
       }
       isSearchParams.current = true;
     } else {
-      dispatch(setCategory('All'))
-      dispatch(setPage(1))
-      setSearchValue('')
+      // initial state
+      dispatch(setCategory("All"));
+      dispatch(setPage(1));
+      setSearchValue("");
       isSearchParams.current = false;
     }
-
   }, [location]);
-/*
-  * Есть баг с ссылкой ?page=1&search=&category=All, параметры равны дефолтному состоянию из-за этого не срабатывает хук
-  */
   useEffect(() => {
-    // Разобраться зачем тут проверяю на первый рендер
-    if (isFirstRender.current) {
-      if (!isSearchParams.current) {
-        fetchProducts(selectedCategory);
-      }
-
-      isSearchParams.current = false;
-    } else {
+    if (!isFirstRender.current) {
       fetchProducts(selectedCategory);
     }
   }, [selectedCategory]);
+
+  useEffect(() => {
+    if (!isFirstRender.current) {
+      const resultQueryStr: QueryParams = {};
+
+      if (page && page !== 1) {
+        resultQueryStr.page = page;
+      }
+      if (searchValue) {
+        resultQueryStr.search = searchValue;
+      }
+      if (selectedCategory && selectedCategory !== "All") {
+        resultQueryStr.category = selectedCategory;
+      }
+
+      const queryStr = qs.stringify(resultQueryStr);
+
+      navigate(`?${queryStr}`); // добавляю строчку в Url
+      isSearchParams.current = true;
+    }
+    isFirstRender.current = false;
+  }, [page, searchValue, selectedCategory]);
 
   const setActiveCategories = (index: number) => {
     pageHandler(1);
@@ -101,19 +113,6 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [page]);
-
-  useEffect(() => {
-    if (!isFirstRender.current) {
-      const queryStr = qs.stringify({
-        page: page,
-        search: searchValue,
-        category: selectedCategory,
-      });
-      navigate(`?${queryStr}`); // добавляю строчку в Url
-      isSearchParams.current = true;
-    }
-    isFirstRender.current = false;
-  }, [page, searchValue, selectedCategory, navigate]);
 
   const pageHandler = (p: number) => {
     dispatch(setPage(p));

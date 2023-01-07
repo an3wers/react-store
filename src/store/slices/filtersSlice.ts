@@ -7,7 +7,7 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-    selectedCategory: 'All',
+    selectedCategory: '', // default All
     page: 1
 }
 
