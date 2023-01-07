@@ -1,14 +1,32 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../index";
 import { ICartItem } from "../../types/types";
+import axios from "axios";
+
+// fake api
+export const fetchCart = createAsyncThunk(
+  "cart/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("https://fakestoreapi.com/carts");
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error?.message);
+    }
+  }
+);
 
 interface CartState {
   items: ICartItem[];
+  isLoading: boolean;
+  error: string | null;
   // sum: number
 }
 
 const initialState: CartState = {
   items: [],
+  isLoading: false,
+  error: null,
   // sum: 0,
 };
 
@@ -33,6 +51,19 @@ export const cartSlice = createSlice({
         currentItem.count = action.payload.count;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCart.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.isLoading = false;
+        console.log("Fake cart", action.payload);
+      })
+      .addCase(fetchCart.rejected, (state, action) => {
+        console.log("Cart error", action.payload);
+      });
   },
 });
 

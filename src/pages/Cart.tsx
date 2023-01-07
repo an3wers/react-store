@@ -7,9 +7,12 @@ import {
   removeItem,
   updateCountInItem,
   selectSum,
+  fetchCart
 } from "../store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { useFormatterPrice } from "../utlis/helpers";
+import { useEffect } from "react";
+
 
 const Cart: React.FC = () => {
   const { items } = useAppSelector((state) => state.cart);
@@ -26,6 +29,11 @@ const Cart: React.FC = () => {
   const setCountHandler = (id: number, count: number) => {
     dispatch(updateCountInItem({ id, count }));
   };
+
+  // fetch fake data
+  useEffect(() => {
+    dispatch(fetchCart())
+  }, [])
 
   return (
     <div className=" container">
