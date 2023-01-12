@@ -70,6 +70,7 @@ export const cartSlice = createSlice({
 export const { addItem, removeItem, updateCountInItem } = cartSlice.actions;
 export const selectSum = (state: RootState) => {
   let result = 0;
+  // let tmpArr = state.items.map((el) => el.count * el.price);
   let tmpArr = state.cart.items.map((el) => el.count * el.price);
 
   tmpArr.forEach((el) => {

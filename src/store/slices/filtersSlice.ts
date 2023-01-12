@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+// TODO: Перенести searchValue в Redux
+
 interface InitialState {
     selectedCategory: string,
     page: number

@@ -11,7 +11,7 @@ import {
 } from "../store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { useFormatterPrice } from "../utlis/helpers";
-import { useEffect } from "react";
+import { useEffect} from 'react'
 
 
 const Cart: React.FC = () => {

@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ModalState } from "./context/ModalContext";
+// import { ModalState } from "./context/ModalContext";
 import { BrowserRouter } from "react-router-dom";
-import { CartProvide } from "./context/CartContext";
+// import { CartProvide } from "./context/CartContext";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
@@ -14,13 +14,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <BrowserRouter>
-    <CartProvide>
-      <ModalState>
+    {/* <CartProvide> */}
+      {/* <ModalState> */}
         <Provider store={store}>
         <App />
         </Provider>
-      </ModalState>
-    </CartProvide>
+      {/* </ModalState> */}
+    {/* </CartProvide> */}
   </BrowserRouter>
 );
 
