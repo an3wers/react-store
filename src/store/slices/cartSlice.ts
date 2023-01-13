@@ -3,12 +3,25 @@ import { RootState } from "../index";
 import { ICartItem } from "../../types/types";
 import axios from "axios";
 
+type FakeCartProduct = {
+  productId: number,
+  quantity: number,
+}
+
+interface FakeCartItem {
+  id: number,
+  userId: number,
+  date: Date,
+  products: FakeCartProduct[],
+  error?: string
+}
 // fake api
-export const fetchCart = createAsyncThunk(
+export const fetchCart = createAsyncThunk<FakeCartItem[], undefined, {rejectValue: string}>(
   "cart/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("https://fakestoreapi.com/carts");
+      const response = await axios.get<FakeCartItem[]>("https://fakestoreapi.com/carts");
+      
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error?.message);
@@ -70,7 +83,6 @@ export const cartSlice = createSlice({
 export const { addItem, removeItem, updateCountInItem } = cartSlice.actions;
 export const selectSum = (state: RootState) => {
   let result = 0;
-  // let tmpArr = state.items.map((el) => el.count * el.price);
   let tmpArr = state.cart.items.map((el) => el.count * el.price);
 
   tmpArr.forEach((el) => {

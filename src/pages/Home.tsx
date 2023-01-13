@@ -67,6 +67,7 @@ const HomePage: React.FC = () => {
       isSearchParams.current = false;
     }
   }, [location]);
+  
   useEffect(() => {
     if (!isFirstRender.current) {
       fetchProducts(selectedCategory);
