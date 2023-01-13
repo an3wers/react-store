@@ -4,30 +4,33 @@ import { ICartItem } from "../../types/types";
 import axios from "axios";
 
 type FakeCartProduct = {
-  productId: number,
-  quantity: number,
-}
+  productId: number;
+  quantity: number;
+};
 
 interface FakeCartItem {
-  id: number,
-  userId: number,
-  date: Date,
-  products: FakeCartProduct[],
-  error?: string
+  id: number;
+  userId: number;
+  date: Date;
+  products: FakeCartProduct[];
+  error?: string;
 }
 // fake api
-export const fetchCart = createAsyncThunk<FakeCartItem[], undefined, {rejectValue: string}>(
-  "cart/fetchAll",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get<FakeCartItem[]>("https://fakestoreapi.com/carts");
-      
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error?.message);
-    }
+export const fetchCart = createAsyncThunk<
+  FakeCartItem[],
+  undefined,
+  { rejectValue: string }
+>("cart/fetchAll", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get<FakeCartItem[]>(
+      "https://fakestoreapi.com/carts"
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error?.message);
   }
-);
+});
 
 interface CartState {
   items: ICartItem[];
