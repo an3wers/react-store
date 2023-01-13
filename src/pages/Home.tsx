@@ -11,7 +11,11 @@ import Search from "../components/Search/Search";
 import qs from "qs";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import { setCategory, setPage } from "../store/slices/filtersSlice";
+import {
+  setCategory,
+  setPage,
+  clearSearchValue,
+} from "../store/slices/filtersSlice";
 
 const HomePage: React.FC = () => {
   interface QueryParams {
@@ -32,12 +36,12 @@ const HomePage: React.FC = () => {
   const { categories, error: cError } = useCategories();
 
   const dispatch = useAppDispatch();
-  const { selectedCategory, page } = useAppSelector((state) => state.filters);
+  const { selectedCategory, page, searchValue } = useAppSelector(
+    (state) => state.filters
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [searchValue, setSearchValue] = useState("");
 
   const isFirstRender = useRef(true);
   const isSearchParams = useRef(false);
@@ -59,7 +63,7 @@ const HomePage: React.FC = () => {
       // initial state
       dispatch(setCategory("All"));
       dispatch(setPage(1));
-      setSearchValue("");
+      dispatch(clearSearchValue());
       isSearchParams.current = false;
     }
   }, [location]);
@@ -119,28 +123,28 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="container relative">
+    <div className='container relative'>
       {!productsIsLoaded && <SpinnerPage />}
-      {pError && cError && <Error message="На странице произошла ошибка" />}
+      {pError && cError && <Error message='На странице произошла ошибка' />}
 
       {productsIsLoaded && (
-        <div className="space-y-10 py-10">
-          <div className=" flex items-center justify-between">
+        <div className='space-y-10 py-10'>
+          <div className=' flex items-center justify-between'>
             <Categories
               activeCategory={selectedCategory}
               setCategory={setActiveCategories}
               categories={categories}
             />
             {/* <Sort /> */}
-            <Search value={searchValue} onSearch={setSearchValue} />
+            <Search />
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {slicedProducts.map((item) => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
           {!slicedProducts.length && (
-            <p className=" text-center py-10">Products not found</p>
+            <p className=' text-center py-10'>Products not found</p>
           )}
           {getPageCount > 1 && (
             <Pagintaion
