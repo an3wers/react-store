@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useCategories() {
   const [categories, setCategories] = useState<string[]>(["All"]);
@@ -14,7 +14,7 @@ export function useCategories() {
       });
 
       setCategories((prev) => {
-        return [...prev, ...res.data];
+        return ['All', ...res.data];
       });
 
       setCategoriesIsLoaded(true);
@@ -25,9 +25,5 @@ export function useCategories() {
     }
   }
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  return { categories, categoriesIsLoaded, error };
+  return { categories, categoriesIsLoaded, error, fetchCategories };
 }

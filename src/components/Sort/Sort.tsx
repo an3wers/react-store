@@ -1,19 +1,17 @@
-import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { ESortBy, setSort } from "../../store/slices/filtersSlice";
 
-const Sort = () => {
-  const sortBy = [
-    'по умолчанию',
-    'цена по убыванию',
-    'цена по возрастанию',
-    'по алфавиту',
-  ];
-
-  const [selectedSort, setSelectedSort] = useState('по умолчанию');
+const Sort: React.FC = () => {
+  const sortBy: ESortBy[] = [ESortBy.default, ESortBy.asc, ESortBy.desc];
+  const dispatch = useAppDispatch();
+  const { selectedSort } = useAppSelector((state) => state.filters);
 
   const selectHandler: React.ChangeEventHandler<HTMLSelectElement> = (
     event
   ) => {
-    setSelectedSort(event.target.value);
+    const currentSort = event.target.value as ESortBy;
+    // setSelectedSort(() => currentSort);
+    dispatch(setSort(currentSort));
   };
 
   return (
@@ -21,7 +19,7 @@ const Sort = () => {
       <select value={selectedSort} onChange={selectHandler}>
         {sortBy.map((el, index) => {
           return (
-            <option key={index} value={index}>
+            <option key={index} value={el}>
               {el}
             </option>
           );

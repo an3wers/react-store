@@ -2,8 +2,8 @@ import Product from "../components/Product/Product";
 import SpinnerPage from "../components/UI/spinner/spinnerPage";
 import { useProducts } from "../hooks/products";
 import Error from "../components/Error/error";
-import { useEffect, useMemo, useRef, useState } from "react";
-// import Sort from "../components/Sort/Sort";
+import { useEffect, useMemo, useRef } from "react";
+import Sort from "../components/Sort/Sort";
 import Pagintaion from "../components/UI/pagination/Pagination";
 import Categories from "../components/Categories/Categories";
 import { useCategories } from "../hooks/categories";
@@ -33,10 +33,10 @@ const HomePage: React.FC = () => {
   } = useProducts();
 
   // hook categories
-  const { categories, error: cError } = useCategories();
+  const { categories, error: cError, fetchCategories } = useCategories();
 
   const dispatch = useAppDispatch();
-  const { selectedCategory, page, searchValue } = useAppSelector(
+  const { selectedCategory, page, searchValue, selectedSort } = useAppSelector(
     (state) => state.filters
   );
 
@@ -70,9 +70,10 @@ const HomePage: React.FC = () => {
   
   useEffect(() => {
     if (!isFirstRender.current) {
-      fetchProducts(selectedCategory);
+      fetchProducts(selectedCategory, selectedSort);
+      fetchCategories()
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedSort]);
 
   useEffect(() => {
     if (!isFirstRender.current) {
@@ -126,7 +127,7 @@ const HomePage: React.FC = () => {
   return (
     <div className='container relative'>
       {!productsIsLoaded && <SpinnerPage />}
-      {pError && cError && <Error message='На странице произошла ошибка' />}
+      {pError && cError && <Error message='Page error' />}
 
       {productsIsLoaded && (
         <div className='space-y-10 py-10'>
@@ -136,8 +137,10 @@ const HomePage: React.FC = () => {
               setCategory={setActiveCategories}
               categories={categories}
             />
-            {/* <Sort /> */}
+            <div className="flex space-x-2">
+            <Sort />
             <Search />
+            </div>
           </div>
           <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {slicedProducts.map((item) => {

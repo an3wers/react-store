@@ -13,17 +13,23 @@ export function useProducts() {
     });
   }
 
-  async function fetchProducts(cat: string) {
+  async function fetchProducts(cat: string, sort: string) {
     const initUrl =
       cat === "All"
         ? "https://fakestoreapi.com/products"
         : `https://fakestoreapi.com/products/category/${cat}`;
 
     // console.log('Category', cat)
+
+    const queryParams: { sort?: string } = {};
+    if (sort && sort !== "default") queryParams.sort = sort;
+
     setProductsIsLoaded(false);
     setError("");
     try {
-      const resp = await axios.get<IProduct[]>(initUrl);
+      const resp = await axios.get<IProduct[]>(initUrl, {
+        params: queryParams,
+      });
       // console.log(resp)
       setProducts(resp.data);
     } catch (e) {
