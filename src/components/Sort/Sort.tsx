@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { ESortBy, setSort } from "../../store/slices/filtersSlice";
+import { memo } from 'react'
 
-const Sort: React.FC = () => {
+const Sort: React.FC = memo(() => {
   const sortBy: ESortBy[] = [ESortBy.default, ESortBy.asc, ESortBy.desc];
   const dispatch = useAppDispatch();
   const { selectedSort } = useAppSelector((state) => state.filters);
@@ -27,6 +28,6 @@ const Sort: React.FC = () => {
       </select>
     </div>
   );
-};
+});
 
 export default Sort;

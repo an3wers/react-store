@@ -1,4 +1,4 @@
-import { ReactEventHandler, useState } from "react";
+import { memo } from 'react'
 
 interface ICategoriesProps {
   categories: string[];
@@ -6,7 +6,7 @@ interface ICategoriesProps {
   setCategory: (index: number) => void;
 }
 
-const Categories: React.FC<ICategoriesProps> = ({
+const Categories: React.FC<ICategoriesProps> = memo(({
   categories,
   activeCategory,
   setCategory,
@@ -18,20 +18,9 @@ const Categories: React.FC<ICategoriesProps> = ({
     "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2 cursor-pointer",
   ];
 
-  // const [activeTab, setActiveTab] = useState(0);
-
   const tabHandler = (index: number) => {
     setCategory(index);
   };
-
-  // const cats: string[] = [
-  //   'Все',
-  //   'Зимние куртки',
-  //   'Дождевики',
-  //   'Джинсы',
-  //   'Шорты',
-  //   'Футболки',
-  // ];
 
   return (
     <div>
@@ -54,6 +43,6 @@ const Categories: React.FC<ICategoriesProps> = ({
       </ul>
     </div>
   );
-};
+});
 
 export default Categories;

@@ -2,13 +2,14 @@ import { useState, useCallback } from "react";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import debounce from "lodash.debounce";
 import { setSearchValue, clearSearchValue } from "../../store/slices/filtersSlice";
+import { memo } from 'react'
 
 interface ISearchProps {
   // value: string,
   // onSearch: (value:string) => void
 }
 
-const Search: React.FC<ISearchProps> = () => {
+const Search: React.FC<ISearchProps> = memo(() => {
   const [localValue, setLocalValue] = useState("");
 
   const dispatch = useAppDispatch();
@@ -69,6 +70,6 @@ const Search: React.FC<ISearchProps> = () => {
       />
     </div>
   );
-};
+});
 
 export default Search;

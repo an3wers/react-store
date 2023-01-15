@@ -67,11 +67,11 @@ const HomePage: React.FC = () => {
       isSearchParams.current = false;
     }
   }, [location]);
-  
+
   useEffect(() => {
     if (!isFirstRender.current) {
       fetchProducts(selectedCategory, selectedSort);
-      fetchCategories()
+      fetchCategories();
     }
   }, [selectedCategory, selectedSort]);
 
@@ -125,40 +125,43 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className='container relative'>
-      {!productsIsLoaded && <SpinnerPage />}
-      {pError && cError && <Error message='Page error' />}
+    <div className="container relative">
+      {pError && cError && <Error message="Page error" />}
 
-      {productsIsLoaded && (
-        <div className='space-y-10 py-10'>
-          <div className=' flex items-center justify-between'>
-            <Categories
-              activeCategory={selectedCategory}
-              setCategory={setActiveCategories}
-              categories={categories}
-            />
-            <div className="flex space-x-2">
+      <div className="space-y-10 py-10">
+        <div className=" flex items-center justify-between">
+          <Categories
+            activeCategory={selectedCategory}
+            setCategory={setActiveCategories}
+            categories={categories}
+          />
+          <div className="flex space-x-2">
             <Sort />
             <Search />
-            </div>
           </div>
-          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+        </div>
+
+        {!productsIsLoaded ? (
+          <SpinnerPage />
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {slicedProducts.map((item) => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
-          {!slicedProducts.length && (
-            <p className=' text-center py-10'>Products not found</p>
-          )}
-          {getPageCount > 1 && (
-            <Pagintaion
-              onPage={pageHandler}
-              pageCount={getPageCount}
-              current={page}
-            />
-          )}
-        </div>
-      )}
+        )}
+        {!slicedProducts.length && productsIsLoaded && (
+          <p className=" text-center py-10">Products not found</p>
+        )}
+
+        {getPageCount > 1 && productsIsLoaded && (
+          <Pagintaion
+            onPage={pageHandler}
+            pageCount={getPageCount}
+            current={page}
+          />
+        )}
+      </div>
     </div>
   );
 };
