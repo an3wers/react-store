@@ -1,16 +1,24 @@
-// import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-// import { CartContext } from '../../context/CartContext';
-import { useFormatterPrice } from '../../utlis/helpers';
-import { useAppSelector } from '../../hooks/reduxHooks'
-import { selectSum } from '../../store/slices/cartSlice';
+import { Link, useNavigate } from "react-router-dom";
+import { useFormatterPrice } from "../../utlis/helpers";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { selectSum } from "../../store/slices/cartSlice";
+import { useEffect, useRef } from "react";
 const Header: React.FC = () => {
+  const summ = useAppSelector(selectSum);
+  const items = useAppSelector((state) => state.cart.items);
 
-  const summ = useAppSelector(selectSum)
-  const items = useAppSelector(state => state.cart.items)
-  // const { items, summ } = useContext(CartContext)
+  const navigate = useNavigate();
+  const isMounted = useRef(false);
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    if (isMounted.current) {
+      const data = JSON.stringify(items);
+      localStorage.setItem("cart", data);
+    }
+
+    isMounted.current = true;
+  }, [items]);
+
   return (
     <div className="mb-5">
       <nav className="bg-white px-2 py-2.5 w-full top-0 left-0 border-b border-gray-200">
@@ -22,7 +30,7 @@ const Header: React.FC = () => {
           </Link>
           <button
             type="button"
-            onClick={() => navigate('/cart')}
+            onClick={() => navigate("/cart")}
             className="text-gray-900 inline-flex space-x-4 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2.5 mr-2 mb-2"
           >
             <span>{useFormatterPrice(summ)}</span>

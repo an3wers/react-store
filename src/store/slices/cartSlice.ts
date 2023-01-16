@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../index";
 import { ICartItem } from "../../types/types";
 import axios from "axios";
+import { getCartItemsfromLocalStorage } from "../../utlis/getCartItemsFromLS";
 
 type FakeCartProduct = {
   productId: number;
@@ -40,7 +41,7 @@ interface CartState {
 }
 
 const initialState: CartState = {
-  items: [],
+  items: getCartItemsfromLocalStorage(),
   isLoading: false,
   error: null,
   // sum: 0,

@@ -124,6 +124,16 @@ const HomePage: React.FC = () => {
     dispatch(setPage(p));
   };
 
+  // Unmount component
+  useEffect(() => {
+    
+      return () => {
+        // console.log('Unmount')
+        dispatch(setCategory(''))
+      }
+   
+  }, [])
+
   return (
     <div className="container relative">
       {pError && cError && <Error message="Page error" />}
