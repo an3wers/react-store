@@ -126,25 +126,23 @@ const HomePage: React.FC = () => {
 
   // Unmount component
   useEffect(() => {
-    
-      return () => {
-        dispatch(setCategory(''))
-      }
-   
-  }, [])
+    return () => {
+      dispatch(setCategory(""));
+    };
+  }, []);
 
   return (
-    <div className="container relative">
-      {pError && cError && <Error message="Page error" />}
+    <div className='container relative'>
+      {pError && cError && <Error message='Page error' />}
 
-      <div className="space-y-10 py-10">
-        <div className="flex flex-col space-y-4 xl:space-y-0 xl:flex-row items-start justify-between">
+      <div className='space-y-10 py-10'>
+        <div className='flex flex-col space-y-4 xl:space-y-0 xl:flex-row items-start justify-between'>
           <Categories
             activeCategory={selectedCategory}
             setCategory={setActiveCategories}
             categories={categories}
           />
-          <div className="flex space-x-4">
+          <div className='flex space-x-4'>
             <Sort />
             <Search />
           </div>
@@ -153,16 +151,15 @@ const HomePage: React.FC = () => {
         {!productsIsLoaded ? (
           <SpinnerPage />
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {slicedProducts.map((item) => {
               return <Product product={item} key={item.id} />;
             })}
           </div>
         )}
         {!slicedProducts.length && productsIsLoaded && (
-          <p className=" text-center py-10">Products not found</p>
+          <p className=' text-center py-10'>Products not found</p>
         )}
-
         {getPageCount > 1 && productsIsLoaded && (
           <Pagintaion
             onPage={pageHandler}

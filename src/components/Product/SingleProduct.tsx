@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { IProduct } from "../../types/types";
 import { useFormatterPrice } from "../../utlis/helpers";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
@@ -9,15 +8,10 @@ interface ISingleProductProps {
 }
 
 const SingleProduct: React.FC<ISingleProductProps> = ({ item }) => {
-  // const { addItem, items } = useContext(CartContext)
-
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((state) => state.cart);
 
-  // Refactoring useMemo
-  const isInCart = useMemo(() => {
-    return !!items.find((el) => el.id === item.id);
-  }, [items]);
+  const isInCart = !!items.find((el) => el.id === item.id);
 
   const addCartHandler = () => {
     dispatch(

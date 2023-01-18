@@ -1,45 +1,25 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import axios from 'axios'
-import { IProduct } from '../types/types'
-import SpinnerPage from '../components/UI/spinner/spinnerPage'
-import SingleProduct from '../components/Product/SingleProduct'
-
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { IProduct } from "../types/types";
+import SpinnerPage from "../components/UI/spinner/spinnerPage";
+import SingleProduct from "../components/Product/SingleProduct";
+import { useSingleProduct } from "../hooks/singleProduct";
+import Error from "../components/Error/error";
 
 const ProductPage = () => {
-    const params = useParams()
+  const params = useParams();
+  const { product, isLoaded, isError, fetchProduct } = useSingleProduct();
 
-    const [product, setProduct] = useState<IProduct | null>(null)
-    const [isLoaded, setIsLoaded] = useState(false)
+  useEffect(() => {
+    fetchProduct(params.productId);
+  }, []);
 
-    useEffect(() => {
-        fetchProduct(params.productId)
-    }, [])
+  return (
+    <div className='container'>
+      {isLoaded && product ? <SingleProduct item={product} /> : <SpinnerPage />}
+      {isError && <Error message='Error on page' />}
+    </div>
+  );
+};
 
-    async function fetchProduct(id: string | undefined) {
-        // https://fakestoreapi.com/products/
-        try {
-            setIsLoaded(false)
-            const resp = await axios.get<IProduct>(`https://fakestoreapi.com/products/${id}`)
-            setProduct(() => {
-                return resp.data
-            })
-
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setIsLoaded(true)
-        }
-    }
-
-    return (
-        <div className="container">
-            {isLoaded && product
-                ? <SingleProduct item={product} />
-                : <SpinnerPage />}
-
-        </div>
-    )
-}
-
-export default ProductPage
+export default ProductPage;
