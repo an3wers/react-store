@@ -55,7 +55,7 @@ const SingleProduct: React.FC<ISingleProductProps> = ({ item }) => {
           <button
             disabled={isInCart}
             onClick={addCartHandler}
-            className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 mr-2 mb-2 focus:outline-none disabled:opacity-50'
+            className='text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg px-5 py-2.5 mr-2 mb-2 focus:border-blue-300 focus:ring focus:ring-blue-300 focus:ring-opacity-50 disabled:opacity-50'
           >
             {isInCart ? "Added to cart" : "Add to cart"}
           </button>

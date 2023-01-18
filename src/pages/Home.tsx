@@ -128,7 +128,6 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     
       return () => {
-        // console.log('Unmount')
         dispatch(setCategory(''))
       }
    
@@ -139,13 +138,13 @@ const HomePage: React.FC = () => {
       {pError && cError && <Error message="Page error" />}
 
       <div className="space-y-10 py-10">
-        <div className=" flex items-center justify-between">
+        <div className="flex flex-col space-y-4 xl:space-y-0 xl:flex-row items-start justify-between">
           <Categories
             activeCategory={selectedCategory}
             setCategory={setActiveCategories}
             categories={categories}
           />
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <Sort />
             <Search />
           </div>
