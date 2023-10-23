@@ -1,13 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useFormatterPrice } from "../../utlis/helpers";
 import { useAppSelector } from "../../hooks/reduxHooks";
-import { selectSum } from "../../store/slices/cartSlice";
 import { useEffect, useRef } from "react";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import { selectItems, selectSum } from "../../store/selectors/cartSelectors";
 
 const Header: React.FC = () => {
+  
+  // Refactoring store
   const summ = useAppSelector(selectSum);
-  const items = useAppSelector((state) => state.cart.items);
+  const items = useAppSelector(selectItems);
 
   const navigate = useNavigate();
   const isMounted = useRef(false);

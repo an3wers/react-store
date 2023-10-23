@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "../index";
 import { ICartItem } from "../../types/types";
 import axios from "axios";
 import { getCartItemsfromLocalStorage } from "../../utlis/getCartItemsFromLS";
@@ -37,7 +36,6 @@ interface CartState {
   items: ICartItem[];
   isLoading: boolean;
   error: string | null;
-  // sum: number
 }
 
 const initialState: CartState = {
@@ -85,14 +83,5 @@ export const cartSlice = createSlice({
 });
 
 export const { addItem, removeItem, updateCountInItem } = cartSlice.actions;
-export const selectSum = (state: RootState) => {
-  let result = 0;
-  let tmpArr = state.cart.items.map((el) => el.count * el.price);
 
-  tmpArr.forEach((el) => {
-    result += el;
-  });
-
-  return result;
-};
 export default cartSlice.reducer;

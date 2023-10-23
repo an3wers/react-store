@@ -2,6 +2,7 @@ import { IProduct } from "../../types/types";
 import { useFormatterPrice } from "../../utlis/helpers";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { addItem } from "../../store/slices/cartSlice";
+import { selectItems } from "../../store/selectors/cartSelectors";
 
 interface ISingleProductProps {
   item: IProduct;
@@ -9,7 +10,7 @@ interface ISingleProductProps {
 
 const SingleProduct: React.FC<ISingleProductProps> = ({ item }) => {
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector((state) => state.cart);
+  const items = useAppSelector(selectItems);
 
   const isInCart = !!items.find((el) => el.id === item.id);
 

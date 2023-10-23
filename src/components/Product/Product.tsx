@@ -4,13 +4,14 @@ import { useFormatterPrice } from "../../utlis/helpers";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { addItem } from "../../store/slices/cartSlice";
+import { selectItems } from "../../store/selectors/cartSelectors";
 
 interface ProductProps {
   product: IProduct;
 }
 
 const Product = ({ product }: ProductProps) => {
-  const { items } = useAppSelector((state) => state.cart);
+  const items = useAppSelector(selectItems);
   const dispatch = useAppDispatch();
 
   const addCartHandler = () => {

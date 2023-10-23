@@ -1,24 +1,22 @@
 // import { useContext } from "react"
 import CartEmptyState from "../components/Cart/EmptyState";
 import CartProductPreview from "../components/Cart/ProductPreview";
-// import { CartContext } from "../context/CartContext"
 import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import {
   removeItem,
   updateCountInItem,
-  selectSum,
   fetchCart,
 } from "../store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { useFormatterPrice } from "../utlis/helpers";
 import { useEffect } from "react";
+import { selectItems, selectSum } from "../store/selectors/cartSelectors";
 
 const Cart: React.FC = () => {
-  const { items } = useAppSelector((state) => state.cart);
+  const items = useAppSelector(selectItems);
   let summ: number | string = useAppSelector(selectSum);
   summ = useFormatterPrice(summ);
   const dispatch = useAppDispatch();
-  // const { items, removeItem, setCount } = useContext(CartContext)
   const navigate = useNavigate();
 
   const removeHandler = (id: number) => {
@@ -29,7 +27,6 @@ const Cart: React.FC = () => {
     dispatch(updateCountInItem({ id, count }));
   };
 
-  // fetch fake data
   useEffect(() => {
     dispatch(fetchCart());
   }, []);
@@ -61,13 +58,13 @@ const Cart: React.FC = () => {
                 <button
                   type='button'
                   onClick={() => navigate("/")}
-                  className='text-gray-900 inline-flex space-x-4 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2 focus:border-blue-300 focus:ring focus:ring-blue-300 focus:ring-opacity-50'
+                  className='text-gray-900 inline-flex space-x-4 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4  font-medium rounded-lg px-5 py-2 focus:border-blue-300 focus:ring-blue-300 focus:ring-opacity-50'
                 >
                   Back
                 </button>
                 <button
                   type='button'
-                  className='text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2 text-center disabled:opacity-50 focus:border-blue-300 focus:ring focus:ring-blue-300 focus:ring-opacity-50'
+                  className='text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-blue-300 focus:ring-4  focus:outline-none  font-medium rounded-lg px-5 py-2 text-center disabled:opacity-50 focus:border-blue-300 focus:ring-opacity-50'
                 >
                   Confirm order
                 </button>

@@ -1,17 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { selectFilters } from "../../store/selectors/filtersSelectors";
 import { ESortBy, setSort } from "../../store/slices/filtersSlice";
 import { memo } from "react";
 
 const Sort: React.FC = memo(() => {
   const sortBy: ESortBy[] = [ESortBy.default, ESortBy.asc, ESortBy.desc];
   const dispatch = useAppDispatch();
-  const { selectedSort } = useAppSelector((state) => state.filters);
+  const { selectedSort } = useAppSelector(selectFilters)
 
   const selectHandler: React.ChangeEventHandler<HTMLSelectElement> = (
     event
   ) => {
     const currentSort = event.target.value as ESortBy;
-    // setSelectedSort(() => currentSort);
     dispatch(setSort(currentSort));
   };
 
